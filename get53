@@ -6,7 +6,7 @@ def print_usage
   puts "This tool searches the AWS account for a string passed to it".light_blue
   puts " and returns the route53 entry and corresponding addresses of what it finds.".light_blue
   puts "Drop this somewhere in your PATH to use it easily.".light_blue
-  puts "Usage: get_db_url <string>".light_green
+  puts "Usage: get53 <string>".light_green
   exit
 end
 print_usage unless ARGV.size == 1
