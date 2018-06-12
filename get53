@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+require 'json'
+require 'colorize'
+
+def print_usage
+  puts "This tool searches the AWS account for a string passed to it".light_blue
+  puts " and returns the route53 entry and corresponding addresses of what it finds.".light_blue
+  puts "Drop this somewhere in your PATH to use it easily.".light_blue
+  puts "Usage: get_db_url <string>".light_green
+  exit
+end
+print_usage unless ARGV.size == 1
+
+db_info_hash = {}
+
+zone_ids = []
+
+JSON.parse(`aws route53 list-hosted-zones`)["HostedZones"].each do |zone|
+  zone_ids.push(zone["Id"].tr("/hostedzone/", ""))
+end
+
+zones = []
+zone_ids.each do |id|
+  zones.push(JSON.parse(`aws route53 list-resource-record-sets --hosted-zone-id "#{id}"`))
+end
+
+zones.each do |zone|
+  zone["ResourceRecordSets"].each do |set|
+    if set["ResourceRecords"] != nil
+      set["ResourceRecords"].each do |record|
+        if record["Value"].include?(ARGV[0]) or set["Name"].include?(ARGV[0])
+          print set["Name"].chomp(".").light_blue
+          print " - ".light_magenta
+          puts record["Value"].light_green
+        end
+      end
+    end
+  end
+end
