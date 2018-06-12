@@ -6,4 +6,4 @@ Drop it in your PATH somewhere for easy access.
 Usage: get53 <search_string>
 
 
-You'll have to have Ruby and AWS CLI installed and configured.
+You'll have to have Ruby and AWS CLI installed and configured before it'll work.
